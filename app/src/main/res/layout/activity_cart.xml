@@ -29,7 +29,8 @@
         android:id="@+id/cart_go_back"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/baseline_shopping_cart_checkout_24"
+        android:src="@drawable/baseline_arrow_circle_up_24"
+        android:rotation="270"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />

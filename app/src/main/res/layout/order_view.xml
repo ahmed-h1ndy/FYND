@@ -5,7 +5,9 @@
     android:layout_height="200dp"
     android:padding="24dp"
     android:layout_gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/login_background"
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/order_price"
@@ -14,7 +16,9 @@
         android:text="price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/order_email"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/order_email"
@@ -23,7 +27,9 @@
         android:text="email"
         app:layout_constraintStart_toEndOf="@id/order_id"
         app:layout_constraintEnd_toStartOf="@id/order_price"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/order_id"
@@ -31,46 +37,62 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="id" />
+        android:text="id"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/order_feedback"
-        app:layout_constraintTop_toBottomOf="@id/order_id"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/order_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="feedback" />
+        android:text="feedback"
+        app:layout_constraintBottom_toTopOf="@+id/order_feedback_value"
+        app:layout_constraintEnd_toStartOf="@id/order_rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/order_id"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/order_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rating"
+        app:layout_constraintBottom_toTopOf="@+id/order_rate_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/order_feedback"
-        app:layout_constraintTop_toBottomOf="@id/order_id" />
+        app:layout_constraintTop_toBottomOf="@id/order_id"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
     <EditText
         android:id="@+id/order_feedback_value"
-        android:layout_width="220dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_feedback"/>
+        android:hint="feedback.."
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"/>
+
     <EditText
         android:id="@+id/order_rating_value"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/order_feedback_value"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/order_rate_button"
-        app:layout_constraintTop_toBottomOf="@id/order_rating"
-        android:inputType="number"/>
+        app:layout_constraintStart_toEndOf="@id/order_feedback_value"
+        android:hint="../5"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"/>
 
     <Button
         android:id="@+id/order_rate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Rate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_feedback"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

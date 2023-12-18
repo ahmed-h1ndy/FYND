@@ -339,8 +339,14 @@ public class FyndDatabase extends SQLiteOpenHelper {
     }
     public User get_user(String email){
 
-        Cursor user_values = fetch_instances(email, TABLE_USER, USER_EMAIL);
-        user_values.moveToFirst();
+
+
+            Cursor user_values = fetch_instances(email, TABLE_USER, USER_EMAIL);
+
+
+            user_values.moveToFirst();
+
+
         String USER_EMAIL=user_values.getString(0);
         String USER_NAME=user_values.getString(1);
         String USER_PASSWORD=user_values.getString(2);

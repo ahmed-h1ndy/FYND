@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,11 +69,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         final String[] feedback_input = new String[1];
         final String[] rating_input = new String[1];
 
-        holder.id.setText(String.valueOf(id));
-        holder.email.setText(email);
-        holder.price.setText(price);
-        holder.feedback.setText(feedback);
-        holder.rating.setText(rating);
+        holder.id.setText("ID: "+String.valueOf(id));
+        holder.email.setText("Mail: "+email);
+        holder.price.setText("Price: "+price+"$");
+        holder.feedback.setText("Feedback: "+feedback);
+        holder.rating.setText("Rating: "+rating+"/5");
 
         if(u.getAdmin().equals("y")){
             holder.feedback_input.setVisibility(View.GONE);
@@ -81,7 +82,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         }
         else{
 
-            if(!holder.feedback.getText().toString().isEmpty()){
+            if(!feedback.isEmpty()){
                 holder.feedback_input.setVisibility(View.GONE);
                 holder.rating_input.setVisibility(View.GONE);
                 holder.rate_button.setVisibility(View.GONE);
@@ -93,6 +94,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                         feedback_input[0] = holder.feedback_input.getText().toString();
                         rating_input[0] = holder.rating_input.getText().toString();
 
+                        if(feedback_input[0].isEmpty()||rating_input[0].isEmpty()){
+                            Toast.makeText(context, "feedback or rating is empty",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
                         holder.feedback.setText(feedback_input[0]);
                         holder.rating.setText(rating_input[0]);
 
@@ -102,6 +107,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
                         Order o = new Order(id, price, rating_input[0], feedback_input[0], email);
                         db.edit_order(o);
+                        }
                     }
                 });
             }

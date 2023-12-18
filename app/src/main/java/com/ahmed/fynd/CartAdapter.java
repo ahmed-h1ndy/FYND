@@ -65,7 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         holder.product_image.setImageBitmap(bmp);
         holder.product_name.setText(name);
         holder.product_quantity.setText(quantity);
-        holder.product_total_price.setText(String.valueOf(total_price));
+        holder.product_total_price.setText(String.valueOf(total_price)+" $");
 
         holder.increase_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 holder.product_quantity.setText(String.valueOf(amount));
                 db.edit_cart_product(db.get_current_user().getEmail(),name,String.valueOf(amount));
                 amount*=Integer.parseInt(products.get(position).getPrice());
-                holder.product_total_price.setText(String.valueOf(amount));
+                holder.product_total_price.setText(String.valueOf(amount)+" $");
             }
         });
         holder.decrease_button.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +91,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 }
                 else{
                     amount*=Integer.parseInt(products.get(position).getPrice());
-                    holder.product_total_price.setText(String.valueOf(amount));
+                    holder.product_total_price.setText(String.valueOf(amount)+" $");
                 }
             }
         });

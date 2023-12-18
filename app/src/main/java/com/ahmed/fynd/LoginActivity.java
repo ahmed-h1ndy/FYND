@@ -106,11 +106,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     // he entered his email
-                    recovery_button.setText("Recover Password");
                     String email = answerView.getText().toString();
-                    user[0] = db.get_user(email);
-                    answerView.setText("");
-                    questionView.setText(user[0].getRecoveryQuestion());
+
+try {
+    user[0] = db.get_user(email);
+    if (user[0] == null) {
+        Toast.makeText(getApplicationContext(), "user not found", Toast.LENGTH_SHORT).show();
+
+    } else {
+        recovery_button.setText("Recover Password");
+
+        questionView.setText(user[0].getRecoveryQuestion());
+    }
+    answerView.setText("");
+}
+catch(Exception e)
+{
+    Toast.makeText(getApplicationContext(), "user not found", Toast.LENGTH_SHORT).show();
+
+}
                 }
             }
         });

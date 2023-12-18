@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="@drawable/login_background"
     android:padding="16dp">
 
     <ImageButton
@@ -23,6 +24,8 @@
         android:id="@+id/add_category_name"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="category name"

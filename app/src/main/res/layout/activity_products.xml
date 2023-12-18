@@ -16,19 +16,20 @@
         app:layout_constraintTop_toBottomOf="@+id/product_cart_button"
         android:layout_marginTop="32dp"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/go_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_shopping_cart_checkout_24"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/baseline_arrow_circle_up_24"
+        android:rotation="270"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/product_cart_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/baseline_shopping_cart_checkout_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

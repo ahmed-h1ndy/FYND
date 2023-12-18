@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
-    android:background="@drawable/login_background">
+    android:background="@drawable/activity_background">
 
     <TextView
         android:id="@+id/fynd_login"
@@ -17,7 +17,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="64dp"
         android:textColor="@color/white"
-        android:textSize="128sp"/>
+        android:textSize="128sp"
+        android:fontFamily="cursive"/>
     <TextView
         android:id="@+id/login"
         android:layout_width="wrap_content"

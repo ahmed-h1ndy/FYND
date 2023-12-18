@@ -358,32 +358,6 @@ public class HomeActivity extends AppCompatActivity {
         d.show();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void edit_product(){
 
         d = new Dialog(this);
@@ -419,6 +393,7 @@ public class HomeActivity extends AppCompatActivity {
                         byte[] img = products.get(i).getImage();
                         Bitmap bmp = BitmapFactory.decodeByteArray(img,0,img.length);
                         dialog_image.setImageBitmap(bmp);
+                        added_image = img;
 
                         product_name.setText(products.get(i).getName());
                         product_category.setText(products.get(i).getCategory());
@@ -445,7 +420,6 @@ public class HomeActivity extends AppCompatActivity {
                                 String price = product_price.getText().toString();
                                 String category = product_category.getText().toString();
                                 String quantity = product_quantity.getText().toString();
-                                added_image = products.get(finalI2).getImage();
                                 if(price.isEmpty()||category.isEmpty()||quantity.isEmpty()){
                                     Toast.makeText(getApplicationContext(),"one of the fields are empty!",Toast.LENGTH_SHORT).show();
                                 }
@@ -515,6 +489,7 @@ public class HomeActivity extends AppCompatActivity {
                         byte[] img = categories.get(i).getImage();
                         Bitmap bmp = BitmapFactory.decodeByteArray(img,0,img.length);
                         dialog_image.setImageBitmap(bmp);
+                        added_image = img;
 
                         category_name.setText(categories.get(i).getName());
 
@@ -535,7 +510,6 @@ public class HomeActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 String name = category_name.getText().toString();
-                                added_image = categories.get(finalI1).getImage();
                                 if(name.isEmpty()||added_image==null){
                                     Toast.makeText(getApplicationContext(),"one of the fields are empty!",Toast.LENGTH_SHORT).show();
                                 }

@@ -68,6 +68,7 @@ public class CartActivity extends AppCompatActivity {
 
         Button confirm_button = d.findViewById(R.id.final_order_button);
         TextView total_fee = d.findViewById(R.id.total_fee_value);
+        fill_products();
 
         int total = 0,price,quantity;
         for(int i =0;i<products.size();i++){
@@ -82,6 +83,9 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 order();
                 delete_all_cart_products();
+                d.dismiss();
+                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(i);
             }
         });
         d.show();
@@ -89,6 +93,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void order() {
         int total = 0,price,quantity;
+        fill_products();
         for(int i =0;i<products.size();i++){
             price = Integer.parseInt(products.get(i).getPrice());
             quantity = Integer.parseInt(products.get(i).getQuantity());

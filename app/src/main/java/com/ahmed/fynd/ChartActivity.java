@@ -4,9 +4,11 @@ import static java.lang.Double.min;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -60,6 +62,15 @@ public class ChartActivity extends AppCompatActivity {
 
         // Refresh the pie chart
         pieChart.invalidate();
+
+        findViewById(R.id.chart_go_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void fill_top_products() {
