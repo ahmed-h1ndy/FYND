@@ -27,11 +27,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(b.getRoot());
         db = new FyndDatabase(this);
 
-        if(db.get_current_user().getRemember().equals("y")){
-            Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-            startActivity(i);
+        CurrentUser c = db.get_current_user();
+        if(c!=null) {
+            if (c.getRemember().equals("y")) {
+                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(i);
+            }
         }
-
         //db.delete_all_databases();
 
         b.loginButton.setOnClickListener(new View.OnClickListener() {

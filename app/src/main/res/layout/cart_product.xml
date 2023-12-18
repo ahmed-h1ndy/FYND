@@ -66,4 +66,14 @@
         app:layout_constraintStart_toEndOf="@+id/cart_decrease_button"
         app:layout_constraintTop_toTopOf="@+id/cart_decrease_button"
         app:layout_constraintBottom_toBottomOf="@id/cart_decrease_button"/>
+
+    <ImageView
+        android:id="@+id/remove_button"
+        android:layout_marginRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/cart_product_price"
+        app:layout_constraintEnd_toStartOf="@+id/cart_product_price"
+        app:layout_constraintTop_toTopOf="@+id/cart_product_price"
+        app:srcCompat="@drawable/baseline_add_shopping_cart_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

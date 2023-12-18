@@ -14,10 +14,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmed.fynd.databinding.ActivityHomeBinding;
@@ -48,6 +51,8 @@ public class HomeActivity extends AppCompatActivity {
         if(u.getAdmin().equals("n")){
             b.addProductButton.setVisibility(View.GONE);
             b.addCategoryButton.setVisibility(View.GONE);
+            b.homeEditCategoryButton.setVisibility(View.GONE);
+            b.homeEditProductButton.setVisibility(View.GONE);
         }
 
         fill_categories();
@@ -112,25 +117,50 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        b.homeAppbar.previousOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), OrdersActivity.class);
+                startActivity(i);
+            }
+        });
+
+        b.homeSearchBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ChartActivity.class);
+                startActivity(i);
+            }
+        });
+
+        b.homeEditProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_product();
+            }
+        });
+
+        b.homeEditCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_category();
+            }
+        });
+
     }
+
 
     private void populate_products_with_search(String search) {
 
-
-
         ArrayList<Product> p = db.get_all_products();
         ArrayList<Product> result = new ArrayList<Product>();
-        Log.i("ffff","in the function");
         for(int i =0;i<p.size();i++){
-            Log.i("ffff","in the loop");
             if(p.get(i).getName().contains(search)){
-                Log.i("ffff","added");
                 result.add(p.get(i));
             }
         }
-        Log.i("ffff","out of loop");
         products.clear();
-
         for(int i = 0;i<result.size();i++){
             products.add(result.get(i));
         }
@@ -170,6 +200,9 @@ public class HomeActivity extends AppCompatActivity {
         EditText product_price = d.findViewById(R.id.add_product_price);
         EditText product_quantity = d.findViewById(R.id.add_product_quantity);
         Button add_product_button = d.findViewById(R.id.confirm_product_button);
+        Button delete_product_button = d.findViewById(R.id.delete_product_button);
+
+        delete_product_button.setVisibility(View.GONE);
 
         dialog_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,8 +211,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivityForResult(intent,3);
             }
         });
-
-
 
         add_product_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,6 +243,9 @@ public class HomeActivity extends AppCompatActivity {
         dialog_image = d.findViewById(R.id.add_category_image);
         EditText category_name = d.findViewById(R.id.add_category_name);
         Button add_category_button = d.findViewById(R.id.confirm_category_button);
+        Button delete_category_button = d.findViewById(R.id.delete_category_button);
+
+        delete_category_button.setVisibility(View.GONE);
 
         dialog_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,8 +256,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
-
 
         add_category_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +273,220 @@ public class HomeActivity extends AppCompatActivity {
                 d.dismiss();
             }
         });
+        d.show();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void edit_product(){
+
+        d = new Dialog(this);
+        d.setContentView(R.layout.forgot_password_popup);
+
+        TextView name = d.findViewById(R.id.question);
+        EditText name_value = d.findViewById(R.id.answer);
+        Button edit = d.findViewById(R.id.recover_button);
+
+        name.setText("Enter product name");
+        edit.setText("Edit");
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean found=false;
+                for(int i =0;i<products.size();i++){
+                    if(products.get(i).getName().equals(name_value.getText().toString())){
+                        found = true;
+
+
+                        d.setContentView(R.layout.add_product);
+
+
+                        dialog_image = d.findViewById(R.id.add_product_image);
+                        EditText product_name = d.findViewById(R.id.add_product_name);
+                        EditText product_category = d.findViewById(R.id.add_product_category);
+                        EditText product_price = d.findViewById(R.id.add_product_price);
+                        EditText product_quantity = d.findViewById(R.id.add_product_quantity);
+                        Button edit_product_button = d.findViewById(R.id.confirm_product_button);
+                        Button delete_product_button = d.findViewById(R.id.delete_product_button);
+
+                        byte[] img = products.get(i).getImage();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(img,0,img.length);
+                        dialog_image.setImageBitmap(bmp);
+
+                        product_name.setText(products.get(i).getName());
+                        product_category.setText(products.get(i).getCategory());
+                        product_price.setText(products.get(i).getPrice());
+                        product_quantity.setText(products.get(i).getQuantity());
+                        edit_product_button.setText("Edit Product");
+
+                        product_name.setEnabled(false);
+
+                        dialog_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent,3);
+                            }
+                        });
+
+                        int finalI1 = i;
+                        int finalI2 = i;
+                        edit_product_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String name = product_name.getText().toString();
+                                String price = product_price.getText().toString();
+                                String category = product_category.getText().toString();
+                                String quantity = product_quantity.getText().toString();
+                                added_image = products.get(finalI2).getImage();
+                                if(price.isEmpty()||category.isEmpty()||quantity.isEmpty()){
+                                    Toast.makeText(getApplicationContext(),"one of the fields are empty!",Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Product p = new Product(name,category,price,quantity,added_image,"0");
+                                    db.edit_product(p);
+                                    products.remove(finalI1);
+                                    products.add(p);
+                                    products_adapter.notifyDataSetChanged();
+                                }
+                                d.dismiss();
+                            }
+                        });
+
+                        int finalI = i;
+                        delete_product_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                db.delete_product(products.get(finalI).getName());
+                                products.remove(finalI);
+                                products_adapter.notifyDataSetChanged();
+                            }
+                        });
+
+
+                    }
+                }
+                if(!found){
+                    Toast.makeText(getApplicationContext(), "Invalid name",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        d.show();
+    }
+
+    public void edit_category(){
+
+
+        d = new Dialog(this);
+        d.setContentView(R.layout.forgot_password_popup);
+
+        TextView name = d.findViewById(R.id.question);
+        EditText name_value = d.findViewById(R.id.answer);
+        Button edit = d.findViewById(R.id.recover_button);
+
+        name.setText("Enter Category name");
+        edit.setText("Edit");
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean found=false;
+                for(int i =0;i<categories.size();i++){
+                    if(categories.get(i).getName().equals(name_value.getText().toString())){
+                        found = true;
+
+
+                        d.setContentView(R.layout.add_category);
+
+
+                        dialog_image = d.findViewById(R.id.add_category_image);
+                        EditText category_name = d.findViewById(R.id.add_category_name);
+                        Button edit_category_button = d.findViewById(R.id.confirm_category_button);
+                        Button delete_category_button = d.findViewById(R.id.delete_category_button);
+
+                        byte[] img = categories.get(i).getImage();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(img,0,img.length);
+                        dialog_image.setImageBitmap(bmp);
+
+                        category_name.setText(categories.get(i).getName());
+
+                        edit_category_button.setText("Edit Category");
+
+                        category_name.setEnabled(false);
+
+                        dialog_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent,3);
+                            }
+                        });
+
+                        int finalI1 = i;
+                        edit_category_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String name = category_name.getText().toString();
+                                added_image = categories.get(finalI1).getImage();
+                                if(name.isEmpty()||added_image==null){
+                                    Toast.makeText(getApplicationContext(),"one of the fields are empty!",Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Category c = new Category(name, added_image);
+                                    db.edit_category(c);
+                                    categories.remove(finalI1);
+                                    categories.add(c);
+                                    categories_adapter.notifyDataSetChanged();
+                                }
+                                d.dismiss();
+                            }
+                        });
+
+                        int finalI = i;
+                        delete_category_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                db.delete_category(categories.get(finalI).getName());
+                                categories.remove(finalI);
+                                categories_adapter.notifyDataSetChanged();
+                            }
+                        });
+
+
+                    }
+                }
+                if(!found){
+                    Toast.makeText(getApplicationContext(), "Invalid name",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         d.show();
     }
 }

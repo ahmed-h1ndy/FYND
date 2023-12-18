@@ -1,9 +1,9 @@
 package com.ahmed.fynd;
 
-public class CartProducts {
+public class CartProduct {
     String product_name,userEmail,quantity;
 
-    public CartProducts(String product_name, String userEmail, String quantity) {
+    public CartProduct(String product_name, String userEmail, String quantity) {
         this.product_name = product_name;
         this.userEmail = userEmail;
         this.quantity = quantity;

@@ -1,17 +1,17 @@
 package com.ahmed.fynd;
 public class Order {
-    String id,price,location,rating,feedback,userEmail;
+    int id;
+    String price,rating,feedback,userEmail;
 
-    public Order(String id, String price, String location, String rating, String feedback, String userEmail) {
+    public Order(int id, String price, String rating, String feedback, String userEmail) {
         this.id = id;
         this.price = price;
-        this.location = location;
         this.rating = rating;
         this.feedback = feedback;
         this.userEmail = userEmail;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -19,9 +19,6 @@ public class Order {
         return price;
     }
 
-    public String getLocation() {
-        return location;
-    }
 
     public String getRating() {
         return rating;
@@ -35,7 +32,7 @@ public class Order {
         return userEmail;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -43,9 +40,6 @@ public class Order {
         this.price = price;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     public void setRating(String rating) {
         this.rating = rating;

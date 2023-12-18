@@ -26,4 +26,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_add_shopping_cart_24" />
 
+    <ImageView
+        android:id="@+id/previous_orders"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/go_to_cart"
+        app:layout_constraintEnd_toStartOf="@+id/go_to_cart"
+        app:layout_constraintTop_toTopOf="@+id/go_to_cart"
+        app:srcCompat="@drawable/baseline_add_shopping_cart_24" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

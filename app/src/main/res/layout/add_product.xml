@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:padding="16dp">
 
     <ImageButton
         android:id="@+id/add_product_image"
@@ -70,12 +71,24 @@
         app:layout_constraintTop_toBottomOf="@+id/add_product_price" />
 
     <Button
-        android:layout_marginTop="16dp"
         android:id="@+id/confirm_product_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Add Product"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_product_quantity"/>
+        app:layout_constraintTop_toBottomOf="@id/add_product_quantity" />
+
+    <Button
+        android:id="@+id/delete_product_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Product"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_product_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

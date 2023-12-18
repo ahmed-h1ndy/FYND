@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String name = b.nameRegister.getText().toString();
+                String name = b.nameValueRegister.getText().toString();
                 String password = b.passwordValueRegister.getText().toString();
                 String email = b.emailValueRegister.getText().toString();
                 String recovery_question = b.passwordRecoveryQuestionValue.getText().toString();

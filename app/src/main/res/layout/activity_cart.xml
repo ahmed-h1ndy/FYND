@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartActivity">
+    tools:context=".CartActivity"
+    android:padding="16dp">
 
     <Button
         android:id="@+id/cart_order_button"
@@ -24,6 +25,14 @@
         app:layout_constraintEnd_toStartOf="@+id/cart_order_button"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/cart_go_back"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/baseline_shopping_cart_checkout_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cart_recycler"
         android:layout_marginVertical="16dp"
@@ -31,6 +40,6 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_go_back"
         app:layout_constraintBottom_toTopOf="@id/cart_order_button"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

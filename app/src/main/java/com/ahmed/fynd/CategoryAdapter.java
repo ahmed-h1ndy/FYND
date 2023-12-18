@@ -1,6 +1,7 @@
 package com.ahmed.fynd;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -57,6 +58,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         holder.product_image.setImageBitmap(bmp);
         holder.product_name.setText(name);
+
+        holder.product_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, ProductsActivity.class);
+                i.putExtra("category",name);
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override

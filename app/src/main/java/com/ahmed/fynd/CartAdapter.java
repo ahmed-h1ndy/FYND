@@ -18,7 +18,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView product_image,increase_button,decrease_button;
+        ImageView product_image,increase_button,decrease_button, remove_button;
         TextView product_name;
         TextView product_quantity;
         TextView product_total_price;
@@ -30,6 +30,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             product_image = itemView.findViewById(R.id.cart_product_image);
             increase_button = itemView.findViewById(R.id.cart_increase_button);
             decrease_button = itemView.findViewById(R.id.cart_decrease_button);
+            remove_button = itemView.findViewById(R.id.remove_button);
             product_quantity = itemView.findViewById(R.id.cart_product_amount);
             product_total_price = itemView.findViewById(R.id.cart_product_price);
         }
@@ -92,6 +93,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     amount*=Integer.parseInt(products.get(position).getPrice());
                     holder.product_total_price.setText(String.valueOf(amount));
                 }
+            }
+        });
+        holder.remove_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.edit_cart_product(db.get_current_user().getEmail(),name,"0");
+                products.remove(position);
+                notifyDataSetChanged();
             }
         });
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
     private static final String TABLE_PRODUCT="product";
     private static final String TABLE_CATEGORY="category";
     private static final String TABLE_ORDER="orders";
-    private static final String TABLE_ORDER_PRODUCTS="order_products";
     private static final String TABLE_CART_PRODUCTS="cart_products";
     private static final String TABLE_CURRENT_USER="current_user";
 
@@ -38,20 +38,15 @@ public class FyndDatabase extends SQLiteOpenHelper {
     private static final String CATEGORY_NAME="name";
     private static final String CATEGORY_IMAGE_BYTE="image";
 
-    private static final String ORDER_ID="id";
     private static final String ORDER_PRICE="price";
-    private static final String ORDER_LOCATION="location";
     private static final String ORDER_RATING="rating";
     private static final String ORDER_FEEDBACK="feedback";
     private static final String ORDER_EMAIL="email";
+    private static final String ORDER_ID = "ID";
 
     private static final String CART_PRODUCTS_USER_EMAIL="email";
     private static final String CART_PRODUCTS_PRODUCT_NAME="product_name";
     private static final String CART_PRODUCTS_QUANTITY="product_quantity";
-
-    private static final String ORDER_PRODUCTS_ORDER_ID="order_id";
-    private static final String ORDER_PRODUCTS_PRODUCT_NAME="product_name";
-    private static final String ORDER_PRODUCTS_QUANTITY="product_quantity";
 
     private static final String CURRENT_USER_EMAIL="email";
     private static final String CURRENT_USER_REMEMBER="remember";
@@ -79,9 +74,8 @@ public class FyndDatabase extends SQLiteOpenHelper {
             +CATEGORY_IMAGE_BYTE+" BLOB"+")";
 
     String CREATE_ORDERS_TABLE="CREATE TABLE "+TABLE_ORDER+"("
-            +ORDER_ID+" TEXT PRIMARY KEY,"
+            +ORDER_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"
             +ORDER_PRICE+" TEXT,"
-            +ORDER_LOCATION+" TEXT,"
             +ORDER_RATING+" TEXT,"
             +ORDER_FEEDBACK+" TEXT,"
             +ORDER_EMAIL+" TEXT"+")";
@@ -93,11 +87,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
             +"PRIMARY KEY"+"("+CART_PRODUCTS_QUANTITY+","+CART_PRODUCTS_PRODUCT_NAME+")"
             +")";
 
-
-    String CREATE_ORDER_PRODUCTS_TABLE="CREATE TABLE "+TABLE_ORDER_PRODUCTS+"("
-            +ORDER_PRODUCTS_ORDER_ID+" TEXT PRIMARY KEY,"
-            +ORDER_PRODUCTS_PRODUCT_NAME+" TEXT,"
-            +ORDER_PRODUCTS_QUANTITY+" TEXT"+")";
 
     String CREATE_CURRENT_USER_TABLE="CREATE TABLE "+TABLE_CURRENT_USER+"("
             +CURRENT_USER_EMAIL+" TEXT PRIMARY KEY,"
@@ -114,7 +103,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_PRODUCT_TABLE);
         db.execSQL(CREATE_ORDERS_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
-        db.execSQL(CREATE_ORDER_PRODUCTS_TABLE);
         db.execSQL(CREATE_CART_PRODUCTS_TABLE);
         db.execSQL(CREATE_CURRENT_USER_TABLE);
 
@@ -124,11 +112,10 @@ public class FyndDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_USER);
-        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_PRODUCT);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_PRODUCT);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_ORDER);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_CART_PRODUCTS);
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_ORDER_PRODUCTS);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_CURRENT_USER);
         onCreate(db);
     }
@@ -279,9 +266,8 @@ public class FyndDatabase extends SQLiteOpenHelper {
     public ArrayList<Order> get_all_orders()
     {
         ArrayList orders_list=new ArrayList<Order>();
-        String ORDER_ID;
+        int ORDER_ID;
         String ORDER_PRICE;
-        String ORDER_LOCATION;
         String ORDER_RATING;
         String ORDER_FEEDBACK;
         String ORDER_EMAIL;
@@ -291,16 +277,16 @@ public class FyndDatabase extends SQLiteOpenHelper {
         {
             do
             {
-                ORDER_ID=values.getString(0);
+                ORDER_ID=values.getInt(0);
                 ORDER_PRICE=values.getString(1);
-                ORDER_LOCATION=values.getString(2);
-                ORDER_RATING=values.getString(3);
-                ORDER_FEEDBACK=values.getString(4);
-                ORDER_EMAIL=values.getString(5);
-                Order order=new Order(ORDER_ID,ORDER_PRICE,ORDER_LOCATION,ORDER_RATING,ORDER_FEEDBACK,ORDER_EMAIL);
+                ORDER_RATING=values.getString(2);
+                ORDER_FEEDBACK=values.getString(3);
+                ORDER_EMAIL=values.getString(4);
+                Order order=new Order(ORDER_ID,ORDER_PRICE,ORDER_RATING,ORDER_FEEDBACK,ORDER_EMAIL);
                 orders_list.add(order);
             }while(values.moveToNext());
         }
+        Log.i("order things",String.valueOf(orders_list.size()));
         return orders_list;
     }
 
@@ -336,20 +322,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
 
     }
 
-    public Product search_product(String product_name)
-    {
-        Cursor values=fetch_instances(product_name,TABLE_PRODUCT,PRODUCT_NAME);
-        values.moveToFirst();
-        String PRODUCT_NAME=values.getString(0);
-        String PRODUCT_CATEGORY=values.getString(1);
-        String PRODUCT_PRICE=values.getString(2);
-        byte[] PRODUCT_IMAGE=values.getBlob(3);
-        String PRODUCT_QUANTITY=values.getString(4);
-        String PRODUCT_SALES=values.getString(5);
-        Product product=new Product(PRODUCT_NAME,PRODUCT_CATEGORY,PRODUCT_PRICE,PRODUCT_QUANTITY,PRODUCT_IMAGE,PRODUCT_SALES);
-        return product;
-    }
-
     public void set_current_user(CurrentUser user){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -364,16 +336,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
     public void delete_table(String table_name){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from "+ table_name);
-    }
-    public User get_remembered_user(){
-
-        Cursor current_values=fetch_instances("y",TABLE_CURRENT_USER,CURRENT_USER_REMEMBER);
-        current_values.moveToFirst();
-        String CURRENT_USER_EMAIL=current_values.getString(0);
-
-        User user = get_user(CURRENT_USER_EMAIL);
-        return user;
-
     }
     public User get_user(String email){
 
@@ -396,13 +358,15 @@ public class FyndDatabase extends SQLiteOpenHelper {
         Cursor user_values = fetch_table(TABLE_CURRENT_USER);
         user_values.moveToFirst();
 
+        if(user_values.getCount()==0){
+            return null;
+        }
         String USER_EMAIL=user_values.getString(0);
         String USER_REMEMBER=user_values.getString(1);
 
         CurrentUser current_user=new CurrentUser(USER_EMAIL,USER_REMEMBER);
         return current_user;
     }
-
 
     public boolean add_to_cart(String email, String product_name, String quantity)
     {
@@ -429,7 +393,7 @@ public class FyndDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db=this.getWritableDatabase();
 
         if(q==0){
-            delete_cart_product(email,product);
+            delete_cart_product(new CartProduct(product,email, "-1"));
         }
         else {
             ContentValues values = new ContentValues();
@@ -438,8 +402,21 @@ public class FyndDatabase extends SQLiteOpenHelper {
             String[] whereArgs = {email,product};
             db.update(TABLE_CART_PRODUCTS, values, whereClause, whereArgs);
         }
+    }
 
+    public void edit_order(Order o)
+    {
+        SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(ORDER_ID, o.getId());
+            values.put(ORDER_EMAIL, o.getUserEmail());
+            values.put(ORDER_PRICE, o.getPrice());
+            values.put(ORDER_FEEDBACK, o.getFeedback());
+            values.put(ORDER_RATING, o.getRating());
 
+            String whereClause = ORDER_ID+" = ?";
+            String[] whereArgs = {String.valueOf(o.getId())};
+            db.update(TABLE_ORDER, values, whereClause, whereArgs);
     }
 
     public void delete_instance(String value, String table_name, String column_name)
@@ -449,10 +426,10 @@ public class FyndDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void delete_cart_product(String email,String product_name){
+    public void delete_cart_product(CartProduct c){
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = CART_PRODUCTS_USER_EMAIL+" = ? AND "+CART_PRODUCTS_PRODUCT_NAME +" = ?";
-        String[] whereArgs = {email, product_name};
+        String[] whereArgs = {c.getUserEmail(), c.getProduct_name()};
         db.delete(TABLE_CART_PRODUCTS, whereClause, whereArgs);
     }
 
@@ -480,26 +457,26 @@ public class FyndDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void edit_product(String name, String category, String price, String quantity, byte[] image, String sales)
+    public void edit_product(Product p)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PRODUCT_NAME, name);
-        values.put(PRODUCT_CATEGORY_NAME, category);
-        values.put(PRODUCT_PRICE, price);
-        values.put(PRODUCT_QUANTITY, quantity);
-        values.put(PRODUCT_IMAGE_BYTE, image);
-        values.put(PRODUCT_SALES,sales);
-        db.update(TABLE_PRODUCT, values, PRODUCT_NAME + " like ?", new String[]{name});
+        values.put(PRODUCT_NAME, p.getName());
+        values.put(PRODUCT_CATEGORY_NAME, p.getCategory());
+        values.put(PRODUCT_PRICE, p.getPrice());
+        values.put(PRODUCT_QUANTITY, p.getQuantity());
+        values.put(PRODUCT_IMAGE_BYTE, p.getImage());
+        values.put(PRODUCT_SALES,p.getSales());
+        db.update(TABLE_PRODUCT, values, PRODUCT_NAME + " like ?", new String[]{p.getName()});
     }
 
-    public void edit_category(String name, byte[] image)
+    public void edit_category(Category c)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(CATEGORY_NAME, name);
-        values.put(CATEGORY_IMAGE_BYTE, image);
-        db.update(TABLE_CATEGORY, values, CATEGORY_NAME + " like ?", new String[]{name});
+        values.put(CATEGORY_NAME, c.getName());
+        values.put(CATEGORY_IMAGE_BYTE, c.getImage());
+        db.update(TABLE_CATEGORY, values, CATEGORY_NAME + " like ?", new String[]{c.getName()});
     }
 
     public void delete_product(String product)
@@ -513,51 +490,19 @@ public class FyndDatabase extends SQLiteOpenHelper {
     }
 
 
-    public boolean confirm_order(String price, String location, String rating, String feedback, String email, Product[] products, int[] quantities)
+    public boolean confirm_order(Order order)
     {
             SQLiteDatabase db=this.getWritableDatabase();
             ContentValues values=new ContentValues();
 
-            int id = get_highest_order_id()+1;
-            values.put(ORDER_ID,id);
-            values.put(ORDER_PRICE,price);
-            values.put(ORDER_LOCATION,location);
-            values.put(ORDER_RATING,rating);
-            values.put(ORDER_FEEDBACK,feedback);
-            values.put(ORDER_EMAIL,email);
+            values.put(ORDER_PRICE,order.getPrice());
+            values.put(ORDER_RATING,order.getRating());
+            values.put(ORDER_FEEDBACK,order.getFeedback());
+            values.put(ORDER_EMAIL, order.getUserEmail());
             db.insert(TABLE_ORDER,null,values);
             db.close();
-
-            for(int i = 0;i< products.length;i++){
-                add_order_products(products[i].getName(), String.valueOf(quantities[i]),String.valueOf(id));
-            }
             return true;
     }
-
-    public boolean add_order_products(String product, String quantity, String order_id){
-
-        SQLiteDatabase db=this.getWritableDatabase();
-        ContentValues values=new ContentValues();
-
-        values.put(ORDER_PRODUCTS_PRODUCT_NAME,product);
-        values.put(ORDER_PRODUCTS_QUANTITY,quantity);
-        values.put(ORDER_PRODUCTS_ORDER_ID,order_id);
-        db.insert(TABLE_ORDER_PRODUCTS,null,values);
-        db.close();
-        return true;
-    }
-    public int get_highest_order_id()
-    {
-        ArrayList<Order> order_list=get_all_orders();
-        int highest=-1;
-        for(int i=0;i<order_list.size();i++)
-        {
-            if(Integer.parseInt(order_list.get(i).getId())>highest)
-                highest=Integer.parseInt(order_list.get(i).getId());
-        }
-        return highest;
-    }
-
 
 
     public ArrayList<Product> top_selling_products(){
@@ -575,7 +520,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
         Cursor values;
         values=db.rawQuery(FETCH_TABLE,null);
         values.moveToFirst();
-        db.close();
 
         if(values.moveToFirst())
         {
@@ -591,6 +535,7 @@ public class FyndDatabase extends SQLiteOpenHelper {
                 products_list.add(product);
             }while(values.moveToNext());
         }
+        Log.i("chart_stuff", String.valueOf(products_list.size()));
         return products_list;
     }
 
@@ -599,7 +544,6 @@ public class FyndDatabase extends SQLiteOpenHelper {
         delete_table(TABLE_CURRENT_USER);
         delete_table(TABLE_USER);
         delete_table(TABLE_PRODUCT);
-        delete_table(TABLE_ORDER_PRODUCTS);
         delete_table(TABLE_CART_PRODUCTS);
         delete_table(TABLE_CATEGORY);
         delete_table(TABLE_ORDER);
