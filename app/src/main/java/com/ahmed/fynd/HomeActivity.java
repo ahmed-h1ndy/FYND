@@ -12,6 +12,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 import com.ahmed.fynd.databinding.ActivityHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -38,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     ArrayList<Product> products;
     Dialog d;
     ImageButton dialog_image;
+    SpeechRecognizer speechRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,14 @@ public class HomeActivity extends AppCompatActivity {
         b = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
         db = new FyndDatabase(this);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+
+
+
+
+
+
 
         CurrentUser c = db.get_current_user();
         User u = db.get_user(c.getEmail());
@@ -88,6 +101,23 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        b.homeAppbar.chartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ChartActivity.class);
+                startActivity(i);
+            }
+        });
+        b.homeAppbar.logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CurrentUser c = db.get_current_user();
+                c.setRemember("n");
+                db.set_current_user(c);
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+            }
+        });
 
         b.homeSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +140,7 @@ public class HomeActivity extends AppCompatActivity {
         b.homeSearchVoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentUser c = db.get_current_user();
-                c.setRemember("n");
-                db.set_current_user(c);
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(i);
+                startSpeechRecognition();
             }
         });
 
@@ -129,8 +155,7 @@ public class HomeActivity extends AppCompatActivity {
         b.homeSearchBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ChartActivity.class);
-                startActivity(i);
+
             }
         });
 
@@ -149,6 +174,26 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private void startSpeechRecognition() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "start speaking");
+
+        // Start speech recognition
+        //speechRecognizer.startListening(intent);
+        startActivityForResult(intent, 100);
+    }
+
+
+    protected void onDestroy() {
+        super.onDestroy();
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
+    }
+
 
 
     private void populate_products_with_search(String search) {
@@ -179,15 +224,20 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode==RESULT_OK&&data!=null){
-            Uri selected_image = data.getData();
-            added_image = HelperFunctions.convertGalleryImageToByteArray(selected_image,getApplicationContext());
+        if (requestCode == 100&&resultCode==RESULT_OK) {
+            String search_query = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0);
+            populate_products_with_search(search_query);
+            b.homeSearchText.setText(search_query);
+        } else {
+            if (resultCode == RESULT_OK && data != null) {
+                Uri selected_image = data.getData();
+                added_image = HelperFunctions.convertGalleryImageToByteArray(selected_image, getApplicationContext());
 
-            Bitmap bmp = BitmapFactory.decodeByteArray(added_image,0,added_image.length);
-            dialog_image.setImageBitmap(bmp);
+                Bitmap bmp = BitmapFactory.decodeByteArray(added_image, 0, added_image.length);
+                dialog_image.setImageBitmap(bmp);
+            }
         }
     }
-
     public void add_product(){
 
 
