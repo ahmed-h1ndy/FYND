@@ -1,11 +1,14 @@
 package com.ahmed.fynd;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmed.fynd.databinding.ActivityHomeBinding;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -155,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
         b.homeSearchBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                scanCode();
             }
         });
 
@@ -175,6 +180,33 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void scanCode() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        bar_launcher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> bar_launcher =
+            registerForActivityResult(new ScanContract(), result ->{
+
+                if(result.getContents()!=null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Result");
+                    builder.setMessage(result.getContents());
+
+                    populate_products_with_search(result.getContents());
+                    b.homeSearchText.setText(result.getContents());
+                    builder.setPositiveButton("OK",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface,int i){
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+                }
+            });
 
     private void startSpeechRecognition() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -229,7 +261,7 @@ public class HomeActivity extends AppCompatActivity {
             populate_products_with_search(search_query);
             b.homeSearchText.setText(search_query);
         } else {
-            if (resultCode == RESULT_OK && data != null) {
+            if (requestCode==3&&resultCode == RESULT_OK && data != null) {
                 Uri selected_image = data.getData();
                 added_image = HelperFunctions.convertGalleryImageToByteArray(selected_image, getApplicationContext());
 
